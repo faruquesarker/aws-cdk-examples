@@ -5,7 +5,7 @@ from aws_cdk.aws_s3_assets import Asset
 from aws_cdk import (
     aws_ec2 as ec2,
     aws_iam as iam,
-    App, Stack
+    App, Stack, Tags
 )
 
 from constructs import Construct
@@ -59,6 +59,19 @@ class EC2InstanceStack(Stack):
         asset.grant_read(instance.role)
 
 app = App()
-EC2InstanceStack(app, "ec2-instance-01")
-EC2InstanceStack(app, "ec2-instance-02")
+
+# First Owner's stacks
+stack1 = EC2InstanceStack(app, "ec2-instance-stack-01")
+Tags.of(stack1).add("EnvironmentName", "Stack-01")
+Tags.of(stack1).add("Owner", "Owner-01")
+
+stack2 = EC2InstanceStack(app, "ec2-instance-stack-02")
+Tags.of(stack2).add("EnvironmentName", "Stack-02")
+Tags.of(stack2).add("Owner", "Owner-01")
+
+# 2nd Owner's stacks
+stack3 = EC2InstanceStack(app, "ec2-instance-stack-03")
+Tags.of(stack3).add("EnvironmentName", "Stack-03")
+Tags.of(stack3).add("Owner", "Owner-02")
+
 app.synth()
