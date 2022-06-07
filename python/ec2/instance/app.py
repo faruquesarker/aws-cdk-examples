@@ -69,9 +69,17 @@ class EC2InstanceStack(Stack):
 
         # Add a Resource-Group to group the resources
         rg = resourcegroups.CfnGroup(self, "resourcegroups",
-            name = self.stack_name,
-            resource_query=RESOURCE_QUERY
-            )
+                name = self.stack_name,
+                resource_query=resourcegroups.CfnGroup.ResourceQueryProperty(
+                    query=resourcegroups.CfnGroup.QueryProperty(
+                        resource_type_filters=["AWS::AllSupported"],
+                        tag_filters=[resourcegroups.CfnGroup.TagFilterProperty(
+                        key=TAG_NAME_OWNER,
+                        values=[TAG_VALUE_OWNER]
+                        )]
+                    )
+                )
+        )
 
 app = App()
 
