@@ -68,10 +68,10 @@ class EC2InstanceStack(Stack):
         asset.grant_read(instance.role)
 
         # Add a Resource-Group to group the resources
-        rg = resourcegroups.CfnGroup(self, "resourcegroups"
-            name=self.stack_name,
+        rg = resourcegroups.CfnGroup(self, "resourcegroups",
+            name = self.stack_name,
             resource_query=RESOURCE_QUERY
-        )
+            )
 
 app = App()
 
