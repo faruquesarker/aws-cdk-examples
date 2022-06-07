@@ -20,7 +20,7 @@ OWNER_NAME_PREFIX = "Owner"
 TAG_NAME_OWNER = "Owner"
 TAG_VALUE_OWNER = "Owner-01"
 TAG_NAME_ENV = "EnvironmentName"
-RESOURCE_QUERY = '{"Type":"TAG_FILTERS_1_0","Query":"{\"ResourceTypeFilters\":[\"AWS::AllSupported\"],\"TagFilters\":[{\"Key\":\"%s\",\"Values\":[\"%s\"]}]}"}' %(TAG_NAME_OWNER, TAG_VALUE_OWNER)
+RESOURCE_QUERY = '{"Type":"TAG_FILTERS_1_0","Query":"{"ResourceTypeFilters":["AWS::AllSupported"],"TagFilters":[{"Key":"%s","Values":["%s"]}]}"}' %(TAG_NAME_OWNER, TAG_VALUE_OWNER)
 
 class EC2InstanceStack(Stack):
 
