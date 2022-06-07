@@ -79,7 +79,7 @@ app = App()
 for x in range(STACK_COUNT):
     name_suffix = "%s" %x
     name_suffix = name_suffix.zfill(2)
-    stack_name = '-'.join(STACK_NAME_PREFIX, name_suffix)
+    stack_name = '-'.join([STACK_NAME_PREFIX, name_suffix])
     stack = EC2InstanceStack(app, stack_name)
     Tags.of(stack).add(TAG_NAME_ENV, stack_name)
     Tags.of(stack).add(TAG_NAME_OWNER, TAG_VALUE_OWNER)
