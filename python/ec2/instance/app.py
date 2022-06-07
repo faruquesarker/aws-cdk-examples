@@ -5,13 +5,22 @@ from aws_cdk.aws_s3_assets import Asset
 from aws_cdk import (
     aws_ec2 as ec2,
     aws_iam as iam,
-    App, Stack, Tags
+    aws_resourcegroups as resourcegroups,
+    App, Stack, Tags,
 )
 
 from constructs import Construct
 
 dirname = os.path.dirname(__file__)
 
+# App-level constants
+STACK_COUNT = 2
+STACK_NAME_PREFIX = "ec2-instance-stack"
+OWNER_NAME_PREFIX = "Owner"
+TAG_NAME_OWNER = "Owner"
+TAG_VALUE_OWNER = "Owner-01"
+TAG_NAME_ENV = "EnvironmentName"
+RESOURCE_QUERY = '{"Type":"TAG_FILTERS_1_0","Query":"{\"ResourceTypeFilters\":[\"AWS::AllSupported\"],\"TagFilters\":[{\"Key\":\"%s\",\"Values\":[\"%s\"]}]}"}' %(TAG_NAME_OWNER, TAG_VALUE_OWNER)
 
 class EC2InstanceStack(Stack):
 
@@ -58,15 +67,21 @@ class EC2InstanceStack(Stack):
             )
         asset.grant_read(instance.role)
 
+        # Add a Resource-Group to group the resources
+        rg = resourcegroups.CfnGroup(
+            name=self.stack_name,
+            resource_query=RESOURCE_QUERY
+        )
+
 app = App()
 
 # Declare and tag stacks
-stack1 = EC2InstanceStack(app, "ec2-instance-stack-01")
-Tags.of(stack1).add("EnvironmentName", "Stack-01")
-Tags.of(stack1).add("Owner", "Owner-01")
-
-stack2 = EC2InstanceStack(app, "ec2-instance-stack-02")
-Tags.of(stack2).add("EnvironmentName", "Stack-02")
-Tags.of(stack2).add("Owner", "Owner-01")
+for x in range(STACK_COUNT):
+    name_suffix = "%s" %x
+    name_suffix = name_suffix.zfill(2)
+    stack_name = '-'.join(STACK_NAME_PREFIX, name_suffix)
+    stack = EC2InstanceStack(app, stack_name)
+    Tags.of(stack).add(TAG_NAME_ENV, stack_name)
+    Tags.of(stack).add(TAG_NAME_OWNER, TAG_VALUE_OWNER)
 
 app.synth()
