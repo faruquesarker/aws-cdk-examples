@@ -84,7 +84,7 @@ app = App()
 
 # Declare and tag stacks
 for x in range(STACK_COUNT):
-    name_suffix = "%s" %x
+    name_suffix = "%s" %(x+1)
     name_suffix = name_suffix.zfill(2)
     stack_name = '-'.join([STACK_NAME_PREFIX, name_suffix])
     stack = EC2InstanceStack(app, stack_name)
